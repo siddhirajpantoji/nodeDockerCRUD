@@ -15,10 +15,51 @@ function createRecord (req, res,next )
         lastName:req.body.lastName,
         mobile:req.body.mobile
     }
-    userDao.createRecord(req,res,userBody, function(req,res,result){
+    userDao.insertRows(req,res,userBody, function(req,res,result){
         utils.SuccessfulPostData(req,res,result)
     })
 }
 
-module.exports.callForAllPagination = callForAllPagination;
-module.exports.createRecord = createRecord
+
+function updateRecord (req, res,next )
+{
+    if(req.body.id)
+    {
+        var userBody={
+            firstName:req.body.firstName,
+            lastName:req.body.lastName,
+            mobile:req.body.mobile,
+            id:req.body.id
+        }
+        userDao.updateRows(req,res,userBody, function(req,res,result){
+            utils.SuccessfulPostData(req,res,result)
+        })
+    }
+    else
+    {
+        utils.Error400(req,res,MESSAGES.REST_MESSAGES.EMPTY_ID_FOUND);
+    }
+    
+}
+
+function deleteRecord (req, res,next )
+{
+    if(req.body.id)
+    {
+        var userBody={
+            firstName:req.body.firstName,
+            lastName:req.body.lastName,
+            mobile:req.body.mobile,
+            id:req.body.id
+        }
+        userDao.deleteRows(req,res,userBody, function(req,res,result){
+            utils.SuccessfulPostData(req,res,result)
+        })
+    }
+    else
+    {
+        utils.Error400(req,res,MESSAGES.REST_MESSAGES.EMPTY_ID_FOUND);
+    }
+    
+}
+module.exports ={ callForAllPagination ,createRecord, updateRecord , deleteRecord};

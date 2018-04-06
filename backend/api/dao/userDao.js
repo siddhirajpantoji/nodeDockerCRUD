@@ -63,6 +63,32 @@ function insertRows(req,res,user,callback)
     });
 }
 
-module.exports.createUserTable = createUserTable
-module.exports.getAllRows = getAllRows
-module.exports.createRecord = insertRows
+function updateRows(req,res,user,callback)
+{
+    var updateQuery = "update  test  SET first_name = $1 , last_name = $2, mobile = $3 where id = $4 ";
+    pool.query(updateQuery,
+    [user.firstName, user.lastName,user.mobile, user.id], function(err,data){
+        if(err)
+        {
+            console.log(err);
+            throw err;
+        }
+        return callback(req,res,data);
+    });
+}
+
+function deleteRows(req,res,user,callback)
+{
+    var deleteQuery = "delete from   test   where id = $1 ";
+    pool.query(deleteQuery,
+    [ user.id], function(err,data){
+        if(err)
+        {
+            console.log(err);
+            throw err;
+        }
+        return callback(req,res,data);
+    });
+}
+
+module.exports = {createUserTable, getAllRows,insertRows, updateRows, deleteRows }
