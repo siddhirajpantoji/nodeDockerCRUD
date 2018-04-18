@@ -1,8 +1,14 @@
 const { Pool, Client } = require('pg');
 const path = require('path');
-var dbConfig = require('../../config/dbConfig')
+var dbConfig = {
+    "user": process.env.user,
+    "host": process.env.host,
+    "database": process.env.database,
+    "password": process.env.password,
+    "port":  process.env.port
+}
 const pool = new Pool(dbConfig);
-
+const client = new Client(dbConfig);
 function createUserTable() {
     // This function will create User Table In Db 
     /**
@@ -52,14 +58,14 @@ function getAllRows(req,res,callback)
 function insertRows(req,res,user,callback)
 {
     var sequence_query = "Select * From test ";
-    pool.query('INSERT INTO test(first_name,last_name,mobile) values ($1, $2,$3)',
+    pool.query('INSERT INTO test(first_name,last_name,mobile) values ($1, $2,$3) RETURNING *',
     [user.firstName, user.lastName,user.mobile], function(err,data){
         if(err)
         {
-            console.log(err);
+            console.error(err);
             throw err;
         }
-        return callback(req,res,data);
+        return callback(req,res,data.rows[0]);
     });
 }
 
